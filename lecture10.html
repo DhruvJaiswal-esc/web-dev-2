@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button>
+        stop alarm
+    </button>
+    <script>
+     let alarm=   setTimeout(()=>{
+            console.log("alarm beeping")
+
+        },5000)
+        function stopAlarm(){
+            clearTimeout(alarm);
+
+        }
+           let stopBtn=document.querySelector("button");
+        stopBtn.addEventListener("click",stopAlarm);
+    </script>
+</body>
+</html>

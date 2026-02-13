@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>0:0</h1>
+    <button id="start">Start</button>
+    <button id="pause">Pause</button> 
+    <button id="reset">Reset</button>
+    <script>
+        let start=document.getElementById("start");
+        let pause=document.getElementById("pause");
+        let reset=document.getElementById("reset");
+        let h1=document.querySelector("h1");
+        let seconds=0;
+        let minutes=0;
+        let watch;
+        function startwatch(){
+            watch = setInterval(()=>{
+                seconds++;
+                minutes=Math.floor(seconds/60);
+                h1.innerText=`${minutes}:${seconds%60}`;
+            },1);
+        }
+        start.addEventListener("click",startwatch);
+        pause.addEventListener("click",()=>{
+            clearInterval(watch);
+        });
+        reset.addEventListener("click",()=>{
+            clearInterval(watch);
+            seconds=0;
+            minutes=0;
+            h1.innerText=`${minutes}:${seconds}`;
+        }); 
+    </script>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+     let cart=["laptop","mobile","EARPHONES"];
+     function createOrder(cart,callback){
+        console.log("Creating order for ",cart);
+        setTimeout(()=>{
+            let orderID=1234;
+             callback(orderID);
+        },5000);
+     }
+     function makePayment(orderID,callback){
+        console.log("Making payment for:",orderID);
+        setTimeout(()=>{
+            let ui=10-1;
+            callback(ui);
+        },3000);
+     }
+     function updateInventory(ui,callback){
+        console.log("inventory update:",ui);
+        setTimeout(()=>{
+            let message="Success"
+            callback(message);
+
+        },5000);
+
+     }
+     function orderStatus(message){
+        console.log("order status:",message);
+
+     }
+     createOrder(cart,function(orderID){
+        makePayment(orderID,function(ui){
+            updateInventory(ui,function(message){
+                orderStatus(message);
+                
+            })
+        })
+
+     })
+    //drawbacks of callback:callback hell(pyramid of doom),difficulty in error handling,code becomes complex,inversion of control(depends on another function to invoke),
+
+    </script>
+</body>
+</html>
