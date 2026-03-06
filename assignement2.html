@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  <style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    min-height:100vh;
+    padding:40px;
+    background:#f4f6fb;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+h1{
+    font-size:2rem;
+    color:#1a1f4e;
+    margin-bottom:30px;
+}
+
+#main-layout{
+    display:flex;
+    gap:25px;
+    width:100%;
+    max-width:900px;
+}
+
+#search-main-container,
+#weather-info-container{
+    background:white;
+    border-radius:12px;
+    padding:22px;
+    flex:1;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+#search-city-box h3,
+#search-history-box h3,
+#weather-info-container h3{
+    font-size:0.9rem;
+    margin-bottom:12px;
+    color:#555;
+    font-weight:600;
+}
+
+form{
+    display:flex;
+    gap:10px;
+}
+
+form input{
+    flex:1;
+    padding:10px 12px;
+    border-radius:6px;
+    border:1px solid #ddd;
+    font-size:0.9rem;
+}
+
+form input:focus{
+    border-color:#3b82f6;
+    outline:none;
+}
+
+form button{
+    padding:10px 16px;
+    background:#3b82f6;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:0.85rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+form button:hover{
+    background:#2563eb;
+}
+
+#searched-cities-box{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.history-pill{
+    background:#eef2ff;
+    border:1px solid #dbe3ff;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:0.75rem;
+    color:#3b4cca;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.history-pill:hover{
+    background:#3b82f6;
+    color:white;
+}
+
+.weather-card{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.weather-card tr{
+    border-bottom:1px solid #eee;
+}
+
+.weather-card td{
+    padding:10px 8px;
+    font-size:0.9rem;
+    color:#333;
+}
+
+.weather-card td:first-child{
+    font-weight:600;
+    color:#666;
+}
+
+.weather-card td:last-child{
+    text-align:right;
+}
+
+.error-msg{
+    color:#ef4444;
+    font-size:0.9rem;
+}
+
+</style>
+</head>
+
+<body>
+    <h1>🌥️Async Weather Tracker</h1>
+    <div id="main-layout">
+        <div id="search-main-container">
+            <div id="search-city-box">
+                <h3>Search City</h3>
+                <form action="">
+                    <input type="text" name="" id="city">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div id="search-history-box">
+                <h3>Search History</h3>
+                <div id="searched-cities-box">
+
+                </div>
+            </div>
+        </div>
+
+        <div id="weather-info-container">
+            <h3>Weather Info</h3>
+            <div id="city-weather-container">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        let API_KEY = "af9f63c59a649f27d602b96a43d0bd14"
+        let city = document.querySelector("#city")
+        let form = document.querySelector("form")
+        let weather = document.querySelector("#city-weather-container")
+
+        function getHistory() {
+            return JSON.parse(localStorage.getItem("weatherHistory")) || []
+        }
+
+        function saveToHistory(cityName) {
+            let history = getHistory()
+            cityName = cityName.trim()
+            history = history.filter(c => c.toLowerCase() !== cityName.toLowerCase())
+            history.unshift(cityName)
+            if (history.length > 10) history = history.slice(0, 10)
+            localStorage.setItem("weatherHistory", JSON.stringify(history))
+            renderHistory()
+        }
+
+        function renderHistory() {
+            let box = document.querySelector("#searched-cities-box")
+            let history = getHistory()
+            box.innerHTML = ""
+            history.forEach(cityName => {
+                let pill = document.createElement("button")
+                pill.textContent = cityName
+                pill.classList.add("history-pill")
+                pill.addEventListener("click", () => {
+                    city.value = cityName
+                    getWeather(cityName)
+                })
+                box.appendChild(pill)
+            })
+        }
+
+
+        async function getWeather(city) {
+            try {
+                let response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`)
+                let data = await response.json()
+
+                if (data.cod !== 200) {
+                    weather.innerHTML = `<p class="error-msg">City not found</p>`
+                    return
+                }
+
+                let card = document.createElement('table')
+                card.classList.add("weather-card")
+                card.innerHTML = `
+                    <tr><td>City</td><td>${data.name}, ${data.sys.country}</td></tr>
+                    <tr><td>Temp</td><td>${data.main.temp} °C</td></tr>
+                    <tr><td>Weather</td><td>${data.weather[0].main}</td></tr>
+                    <tr><td>Humidity</td><td>${data.main.humidity}%</td></tr>
+                    <tr><td>Wind</td><td>${data.wind.speed} m/s</td></tr>`
+                weather.innerHTML = ""
+                weather.append(card)
+                console.log(data)
+
+                saveToHistory(data.name)
+
+            } catch (error) {
+                weather.innerHTML = `<p class="error-msg">Network error. Please try again.</p>`
+            }
+        }
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            getWeather(city.value)
+        })
+
+        renderHistory()
+
+    </script>
+
+</body>
+
+
+</html>

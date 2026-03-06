@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API</title>
+    <!-- APPLICATION PROGRAMMING INTERFACE -->
+</head>
+
+<body>\<style>
+        body {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .container {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            border:2px rgba(red, green, blue, alpha)
+        }
+    </style>
+<script>
+async function sendProducts() {
+    let response1 = await fetch("https://dummyjson.com/products/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title: "BMW Pencil",
+            description: "hello section F",
+            brand: "KRMU",
+            category: "Lab 20"
+        })
+    });
+
+    let data = await response1.json();
+    console.log("Product added:", data);
+}
+
+sendProducts(); // call it
+</script>
+</body>
+
+</html>

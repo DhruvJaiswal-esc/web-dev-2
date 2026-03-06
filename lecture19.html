@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>generator and carrying</title>
+</head>
+<body>
+    <script>
+    // sessionStorage.setItem("Name","Namun")
+    // sessionStorage.setItem("Name2","vedu")
+    // console.log(sessionStorage.getItem("Name"))
+    // console.log(sessionStorage.getItem("Name2"))
+    // // sessionStorage.clear()
+    // document.cookie="Naman_thak_gaya=Tired; expires=Mon,26 Feb 2026,10:56:12 UTC;"
+    // document.cookie="uska_msg=idk; expires=Mon,26 Feb 2026,10:56:12 UTC;"
+    function* educationSystem(){
+        yield "primary education"
+        yield "secondary education"
+        yield "higher education"
+        yield "Masters in higher education"
+    }
+    let a=educationSystem();
+    console.log(a.next().value)
+    console.log(a.next().value)
+    console.log(a.next().value)
+    console.log(a.next().value)
+    
+     </script>
+</body>
+</html>

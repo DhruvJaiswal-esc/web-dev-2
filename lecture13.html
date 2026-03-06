@@ -30,12 +30,19 @@
         
 function makePayment(order){
     console.log("Initializing order")
-    return new Promise(()=>{
+    return new Promise((resolve,reject)=>{
         let network=true;
-        setTimeout(()=>)
+        setTimeout(()=>{
+            if(network===true){
+                resolve({...order,paymentID:"PAY1458"})
+            }else{
+                reject("payment failed")
+            }
+            }
+     ,5000) })
 
-    })
-}
+    }
+
         function updateInventory(order){
             console.log("updating inventory...")
             return new Promise((resolve,reject)=>{
@@ -68,20 +75,39 @@ function makePayment(order){
             },5000)
         })
         }
-        createOrder(cart).then((order)=>{
-            console.log("order creater for",order)
-            return makePayment(order)
-        }).then((order)=>{
-            console.log("Payment Successfull",order)
-            return updateInventory(order)
-        }).then((order)=>{
-            console.log("payment successfull",order)
-            return orderStatus(order)
+        // createOrder(cart).then((order)=>{
+        //     console.log("order creater for",order)
+        //     return makePayment(order)
+        // }).then((order)=>{
+        //     console.log("Payment Successfull",order)
+        //     return updateInventory(order)
+        // }).then((order)=>{
+        //     console.log("payment successfull",order)
+        //     return orderStatus(order)
         
-        }).then((order)=>{
-            console.log(order)
+        // }).then((order)=>{
+        //     console.log(order)
 
-        }).catch(err=>console.log(err))
+        // }).catch(err=>console.log(err))
+       async function ecommerce(){
+           try{
+            let order1= await createOrder(cart)
+           console.log("order created:".order1)
+           let order2=await makePayment(order1)
+           console.log("payment for",order2)
+           let order3=await updateInventory(order2)
+           console.log("updateInventory for",order3)
+           let order4=await orderStatus(order3)
+           console.log("Final order",order4)
+
+           }
+           catch{
+            console.log("error",order)
+           }
+
+            
+        }
+        ecommerce()
     </script>
 </body>
 </html>
